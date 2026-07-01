@@ -12,7 +12,7 @@ namespace HitEducation.App;
 
 public static class UpdateChecker
 {
-	public const string VersionUrl = "https://gitee.com/lu-hitmux/HitEducation/raw/main/update/version.json";
+	public const string VersionUrl = "https://gitee.com/lu-hitmux/hiteducation/raw/main/update/version.json";
 
 	private static readonly HttpClient Client = new HttpClient
 	{
