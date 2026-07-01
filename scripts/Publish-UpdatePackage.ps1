@@ -175,6 +175,7 @@ $assemblyInfo = Join-Path $repoRoot "app\Properties\AssemblyInfo.cs"
 $appProject = Join-Path $repoRoot "app\HitEducation.App.csproj"
 $publish = Join-Path $repoRoot "app\bin\Release\net8.0-windows\win-x64\publish"
 $packageDir = Join-Path $repoRoot "app\bin\Release\net8.0-windows\win-x64\packages"
+$sourceManifest = Join-Path $repoRoot "update\version.json"
 
 if ([string]::IsNullOrWhiteSpace($PackageSuffix)) {
     $PackageSuffix = $Version
@@ -269,11 +270,15 @@ if ($UploadGitee) {
     $giteeBaseUrl = "https://gitee.com/$GiteeOwner/$GiteeRepo/releases/download/$GiteeTag"
     $giteeVersionJson = Join-Path $packageDir "version-gitee.json"
     Write-Manifest -Path $giteeVersionJson -DownloadBaseUrl $giteeBaseUrl
+    $sourceManifestDirectory = Split-Path -Parent $sourceManifest
+    if (!(Test-Path -LiteralPath $sourceManifestDirectory)) {
+        New-Item -ItemType Directory -Path $sourceManifestDirectory | Out-Null
+    }
+    Copy-Item -LiteralPath $giteeVersionJson -Destination $sourceManifest -Force
     $giteeRelease = New-GiteeRelease -Tag $GiteeTag
     $giteeReleaseUrl = "https://gitee.com/$GiteeOwner/$GiteeRepo/releases/tag/$GiteeTag"
     Publish-GiteeAttachment -ReleaseId $giteeRelease.id -Path $appZip | Out-Null
     Publish-GiteeAttachment -ReleaseId $giteeRelease.id -Path $updaterZip | Out-Null
-    Publish-GiteeAttachment -ReleaseId $giteeRelease.id -Path $giteeVersionJson -FileName "version.json" | Out-Null
 }
 
 if ($Upload) {
