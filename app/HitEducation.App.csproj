@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>HitEducation.App</AssemblyName>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <OutputType>WinExe</OutputType>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <PlatformTarget>x64</PlatformTarget>
+    <ServerGarbageCollection>false</ServerGarbageCollection>
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LangVersion>12.0</LangVersion>
+    <Nullable>annotations</Nullable>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>app.ico</ApplicationIcon>
+    <RootNamespace />
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="HitEducation.Updater\**\*.cs" />
+    <None Include="HitEducation.Updater\**\*.cs" />
+    <None Remove="icons\add-homework-mono.png" />
+    <None Remove="icons\hiteducation-app-mono.ico" />
+    <None Remove="icons\hiteducation-app-mono.png" />
+    <None Remove="icons\reminder-mono.png" />
+    <None Remove="icons\history-archive-mono.png" />
+    <Resource Include="icons\add-homework-mono.png" />
+    <Resource Include="icons\hiteducation-app-mono.ico" />
+    <Resource Include="icons\hiteducation-app-mono.png" />
+    <Resource Include="icons\reminder-mono.png" />
+    <Resource Include="icons\history-archive-mono.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <Target Name="PublishUpdater" AfterTargets="Publish">
+    <PropertyGroup>
+      <UpdaterPublishDir>$(IntermediateOutputPath)updater-publish\</UpdaterPublishDir>
+    </PropertyGroup>
+    <RemoveDir Directories="$(UpdaterPublishDir)" />
+    <MSBuild Projects="HitEducation.Updater.csproj" Targets="Publish" Properties="Configuration=$(Configuration);RuntimeIdentifier=$(RuntimeIdentifier);SelfContained=$(SelfContained);PublishDir=$(UpdaterPublishDir)" />
+    <ItemGroup>
+      <UpdaterPublishFiles Include="$(UpdaterPublishDir)**\*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(UpdaterPublishFiles)" DestinationFiles="@(UpdaterPublishFiles->'$(PublishDir)%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target>
+</Project>

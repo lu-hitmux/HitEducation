@@ -1,0 +1,145 @@
+<Window x:Class="HitEducation.App.AddEditHomeworkWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+        Title="添加作业"
+        Icon="icons/hiteducation-app-mono.ico"
+        Width="640"
+        MinWidth="640"
+        Height="760"
+        MinHeight="560"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="None"
+        ResizeMode="CanResize"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ShowInTaskbar="False"
+        UseLayoutRounding="True">
+    <Border x:Name="WindowRoot" Padding="18" CornerRadius="24" Background="#F2FFFFFF" TextElement.FontSize="17">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid x:Name="TitleBar" Grid.Row="0" Margin="-18,-18,-18,12" Background="Transparent" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+                <Border Background="#D9FFFFFF" CornerRadius="24,24,0,0" IsHitTestVisible="False" />
+                <TextBlock x:Name="TitleText" Margin="22,24,22,10" FontSize="21" FontWeight="Bold" Foreground="#0F172A" />
+            </Grid>
+
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" PanningMode="VerticalOnly">
+                <StackPanel x:Name="WindowContent">
+                    <TextBlock x:Name="SubjectLabel" FontWeight="Bold" />
+                    <ComboBox x:Name="SubjectBox" Height="46" Margin="0,6,0,12" DisplayMemberPath="Name" SelectionChanged="SubjectBox_SelectionChanged" />
+
+                    <TextBlock x:Name="KeywordTemplatesLabel" FontWeight="Bold" />
+                    <WrapPanel x:Name="TemplatePanel" Margin="0,6,0,12" />
+
+                    <TextBlock x:Name="HomeworkContentLabel" FontWeight="Bold" />
+                    <Grid Margin="0,6,0,12">
+                        <TextBox x:Name="ContentBox" Height="120" Padding="8,8,42,8" AcceptsReturn="True" TextWrapping="Wrap" />
+                        <Button x:Name="ClearContentButton"
+                                Content="×"
+                                Width="34"
+                                Height="34"
+                                Margin="0,6,6,0"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Top"
+                                FontSize="20"
+                                FontWeight="Bold"
+                                Click="ClearContentButton_Click" />
+                    </Grid>
+
+                    <TextBlock x:Name="DueTimeLabel" FontWeight="Bold" />
+                    <CheckBox x:Name="NoSubmissionRequiredBox" Margin="0,8,0,8" HorizontalAlignment="Left" Checked="NoSubmissionRequiredBox_Changed" Unchecked="NoSubmissionRequiredBox_Changed" />
+                    <Grid Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="230" />
+                            <ColumnDefinition Width="12" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <DatePicker x:Name="DueDatePicker" Visibility="Collapsed" />
+                            <Border Height="40" Padding="10,0" CornerRadius="10" Background="#F8FAFC" BorderBrush="#CBD5E1" BorderThickness="1">
+                                <TextBlock VerticalAlignment="Center" Text="{Binding SelectedDate, ElementName=DueDatePicker, StringFormat=yyyy-MM-dd}" />
+                            </Border>
+                            <Calendar x:Name="DueDateCalendar"
+                                      Margin="0,6,0,0"
+                                      SelectedDatesChanged="DueDateCalendar_SelectedDatesChanged" />
+                        </StackPanel>
+                        <Border x:Name="DueTimeWheel"
+                                Grid.Column="2"
+                                Height="128"
+                                CornerRadius="16"
+                                Background="#E2E8F0"
+                                ClipToBounds="True"
+                                PreviewMouseDown="DueTimeWheel_MouseDown"
+                                PreviewMouseMove="DueTimeWheel_MouseMove"
+                                PreviewMouseUp="DueTimeWheel_MouseUp"
+                                MouseWheel="DueTimeWheel_MouseWheel"
+                                PreviewTouchDown="DueTimeWheel_TouchDown"
+                                PreviewTouchMove="DueTimeWheel_TouchMove"
+                                PreviewTouchUp="DueTimeWheel_TouchUp">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.ColumnSpan="3" Height="46" VerticalAlignment="Center" Background="#F8FAFC" Opacity="0.72" />
+                                <Border x:Name="TimeWheelDragBorder" Grid.Column="0" Height="54" Margin="8,0" VerticalAlignment="Center" CornerRadius="14" BorderBrush="#38BDF8" BorderThickness="2" Background="Transparent" Opacity="0" IsHitTestVisible="False">
+                                    <Border.RenderTransform>
+                                        <TranslateTransform x:Name="TimeWheelDragTransform" />
+                                    </Border.RenderTransform>
+                                </Border>
+                                <StackPanel x:Name="HourWheelVisual" Grid.Column="0" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" IsHitTestVisible="False">
+                                    <StackPanel.RenderTransform>
+                                        <TranslateTransform x:Name="HourWheelTransform" />
+                                    </StackPanel.RenderTransform>
+                                    <TextBlock x:Name="HourPrevText" FontSize="20" Foreground="#64748B" Opacity="0.5" TextAlignment="Center" RenderTransformOrigin="0.5,1">
+                                        <TextBlock.RenderTransform>
+                                            <ScaleTransform ScaleX="0.92" ScaleY="0.72" />
+                                        </TextBlock.RenderTransform>
+                                    </TextBlock>
+                                    <TextBlock x:Name="HourText" FontSize="38" FontWeight="Bold" Foreground="#0F172A" TextAlignment="Center" />
+                                    <TextBlock x:Name="HourNextText" FontSize="20" Foreground="#64748B" Opacity="0.5" TextAlignment="Center" RenderTransformOrigin="0.5,0">
+                                        <TextBlock.RenderTransform>
+                                            <ScaleTransform ScaleX="0.92" ScaleY="0.72" />
+                                        </TextBlock.RenderTransform>
+                                    </TextBlock>
+                                </StackPanel>
+                                <TextBlock Grid.Column="1" Text=":" FontSize="38" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center" Margin="10,0" />
+                                <StackPanel x:Name="MinuteWheelVisual" Grid.Column="2" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" IsHitTestVisible="False">
+                                    <StackPanel.RenderTransform>
+                                        <TranslateTransform x:Name="MinuteWheelTransform" />
+                                    </StackPanel.RenderTransform>
+                                    <TextBlock x:Name="MinutePrevText" FontSize="20" Foreground="#64748B" Opacity="0.5" TextAlignment="Center" RenderTransformOrigin="0.5,1">
+                                        <TextBlock.RenderTransform>
+                                            <ScaleTransform ScaleX="0.92" ScaleY="0.72" />
+                                        </TextBlock.RenderTransform>
+                                    </TextBlock>
+                                    <TextBlock x:Name="MinuteText" FontSize="38" FontWeight="Bold" Foreground="#0F172A" TextAlignment="Center" />
+                                    <TextBlock x:Name="MinuteNextText" FontSize="20" Foreground="#64748B" Opacity="0.5" TextAlignment="Center" RenderTransformOrigin="0.5,0">
+                                        <TextBlock.RenderTransform>
+                                            <ScaleTransform ScaleX="0.92" ScaleY="0.72" />
+                                        </TextBlock.RenderTransform>
+                                    </TextBlock>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <WrapPanel x:Name="QuickTimePanel" Margin="0,0,0,10" />
+                </StackPanel>
+            </ScrollViewer>
+
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,14,0,0">
+                <TextBlock x:Name="ErrorText" VerticalAlignment="Center" Margin="0,0,12,0" Foreground="#DC2626" TextWrapping="Wrap" />
+                <Button x:Name="CancelButton" MinWidth="96" Height="46" Margin="8,0,0,0" Click="Cancel_Click" />
+                <Button x:Name="SaveContinueButton" MinWidth="132" Height="46" Margin="8,0,0,0" Click="SaveContinue_Click" />
+                <Button x:Name="SaveButton" MinWidth="96" Height="46" Margin="8,0,0,0" Click="Save_Click" />
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

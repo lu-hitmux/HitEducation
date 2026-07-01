@@ -1,0 +1,320 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace HitEducation.App;
+
+public static class Localizer
+{
+    public const string Chinese = "zh-CN";
+    public const string English = "en-US";
+
+    private static readonly Dictionary<string, string> En = new()
+    {
+        ["AppName"] = "Class Homework",
+        ["MainTitle"] = "Class Homework",
+        ["PendingCount"] = "{0} pending",
+        ["NoHomework"] = "No homework",
+        ["Add"] = "Add",
+        ["AddHomework"] = "Add Homework",
+        ["Settings"] = "Settings",
+        ["Hide"] = "Hide",
+        ["More"] = "More",
+        ["Done"] = "Done",
+        ["Edit"] = "Edit",
+        ["Delete"] = "Delete",
+        ["List"] = "List",
+        ["UnlockWindow"] = "Unlock Window",
+        ["LockWindow"] = "Lock Window",
+        ["DisableTopmost"] = "Disable Topmost",
+        ["KeepTopmost"] = "Keep Topmost",
+        ["Exit"] = "Exit",
+        ["ShowHide"] = "Show/Hide",
+        ["OpenSettings"] = "Open Settings",
+        ["ConfirmDeleteHomework"] = "Delete this homework?",
+        ["DeleteHomework"] = "Delete Homework",
+        ["ReminderDueDefault"] = "Homework is due",
+        ["ReminderUpcomingDefault"] = "Homework is due soon",
+        ["ReminderDetailDefault"] = "Before {0}: {1}",
+        ["SettingsAutoSaved"] = "Display settings have been saved automatically.",
+        ["SettingsSaved"] = "Settings saved.",
+        ["Export"] = "Export",
+        ["Import"] = "Import",
+        ["RestoreBackup"] = "Restore Backup",
+        ["CheckUpdate"] = "Check Update",
+        ["CheckingUpdate"] = "Checking for updates...",
+        ["UpdateAlreadyLatest"] = "Already up to date. Current version: {0}.",
+        ["UpdateAvailableStatus"] = "New version available: {0}.",
+        ["UpdateAvailableTitle"] = "Update Available",
+        ["UpdateAvailableMessage"] = "Current version: {0}\nLatest version: {1}\n\nUpdate notes:\n{2}\n\nStart updater now? The app will restart automatically after the update is ready.",
+        ["UpdateInstalling"] = "Updater started. The app will restart automatically after the update is ready...",
+        ["UpdateNoNotes"] = "No update notes.",
+        ["UpdateCheckFailed"] = "Update check failed: {0}",
+        ["UpdateStartFailed"] = "Failed to start updater. See app logs for details.",
+        ["Cancel"] = "Cancel",
+        ["Apply"] = "Apply",
+        ["OK"] = "OK",
+        ["Language"] = "Language",
+        ["KeepOnTop"] = "Keep on top",
+        ["AutoStart"] = "Start with Windows",
+        ["AutoUpdate"] = "Auto update on startup",
+        ["LockWindowPositionSize"] = "Lock window position and size",
+        ["EnableFullscreenDetection"] = "Enable fullscreen detection",
+        ["EnableBackgroundImage"] = "Enable background image",
+        ["ChooseBackgroundImage"] = "Choose Image",
+        ["NoBackgroundImageSelected"] = "No background image selected",
+        ["ImageFileFilter"] = "Image files|*.jpg;*.jpeg;*.png;*.bmp;*.gif;*.tif;*.tiff;*.webp|All files (*.*)|*.*",
+        ["BackgroundImageImported"] = "Background image imported.",
+        ["BackgroundImageImportFailed"] = "Background image import failed: {0}",
+        ["UnsupportedImageFile"] = "Unsupported image file type.",
+        ["BackgroundOpacity"] = "Background opacity (left: lighter, right: opaque)",
+        ["FontOpacity"] = "Font opacity (left: lighter, right: opaque)",
+        ["FontSize"] = "Font size (left: smaller, right: larger)",
+        ["AutoScrollSpeed"] = "Auto-scroll speed (left: slower, right: faster)",
+        ["IdleScrollSeconds"] = "Start auto-scrolling after idle seconds",
+        ["EdgePauseSeconds"] = "Pause seconds at top/bottom",
+        ["Reminder"] = "Reminder",
+        ["MinutesBefore"] = "Minutes before",
+        ["NotificationSeconds"] = "Notification seconds",
+        ["UpcomingTemplate"] = "Upcoming reminder template",
+        ["DueTemplate"] = "Due reminder template",
+        ["UpcomingTemplateDefault"] = "{Subject} homework is due soon\nBefore {Time}: {Content}",
+        ["DueTemplateDefault"] = "{Subject} homework is due\nBefore {Time}: {Content}",
+        ["PlaceholdersHelp"] = "Available placeholders: {学科}, {内容}, {时间}, {日期}, {提前分钟}. The first line is the popup title; later lines are the detail.",
+        ["QuickTime"] = "Quick Times",
+        ["QuickTimeHelp"] = "One per line: display name|rule. Examples: today 12:10, tomorrow 07:45, weekday 1 08:00, +30min, +1hour. weekday 1-7 means Monday to Sunday of this week.",
+        ["SubjectsTemplates"] = "Subjects, colors, and templates (one per line: subject|#64748B|template1,template2)",
+        ["TemplatesHelp"] = "Use {n} in a template for numbering. Only templates with {n} auto-increment. Example: Period Homework {n}, Lesson {n} Practice",
+        ["ClassPeriods"] = "Class periods (one per line: 08:00-08:45)",
+        ["WeekdaysOnly"] = "Weekdays only",
+        ["EveryDay"] = "Every day",
+        ["FullscreenDetection"] = "Fullscreen Detection",
+        ["FullscreenHelp"] = "When the whitelist is empty, all programs are detected; the blacklist takes priority. Enter one process name per line, such as msedge, POWERPNT, wpp.",
+        ["Whitelist"] = "Whitelist",
+        ["Blacklist"] = "Blacklist",
+        ["RestoreBackupSuccess"] = "Latest backup restored.",
+        ["RestoreBackupFailed"] = "No backup is available, or the backup could not be read.",
+        ["ExportSettings"] = "Export Settings",
+        ["SettingsFileFilter"] = "Class homework settings (*.json)|*.json|All files (*.*)|*.*",
+        ["SettingsFileName"] = "class-homework-settings-{0}.json",
+        ["SettingsExported"] = "Settings exported.",
+        ["ImportSettings"] = "Import Settings",
+        ["SettingsImported"] = "Settings imported. Existing settings were backed up first.",
+        ["ImportFailed"] = "Import failed: {0}",
+        ["Subject"] = "Subject",
+        ["KeywordTemplates"] = "Keyword Templates",
+        ["HomeworkContent"] = "Homework Content",
+        ["DueTime"] = "Due Time",
+        ["NoSubmissionRequired"] = "No submission required",
+        ["SaveContinue"] = "Save and Add More",
+        ["Save"] = "Save",
+        ["EditHomework"] = "Edit Homework",
+        ["SavedContinue"] = "Saved. You can continue adding.",
+        ["ChooseSubject"] = "Please choose a subject.",
+        ["ContentRequired"] = "Homework content cannot be empty.",
+        ["InvalidDueTime"] = "Please choose a valid due date and time, for example 17:30.",
+        ["DueTimePast"] = "Due time cannot be earlier than the current time.",
+        ["DuplicateHomework"] = "Homework with the same subject, content, and due time already exists.",
+        ["NoonToday"] = "Today Noon",
+        ["Tonight"] = "Tonight",
+        ["TomorrowMorning"] = "Tomorrow Morning",
+        ["TomorrowNoon"] = "Tomorrow Noon",
+        ["TomorrowNight"] = "Tomorrow Night",
+        ["OneHourLater"] = "In 1 Hour",
+        ["ThirtyMinutesLater"] = "In 30 Minutes",
+        ["CurrentHomework"] = "Current Homework",
+        ["History"] = "History",
+        ["BatchArchive"] = "Batch Archive",
+        ["BatchRestore"] = "Batch Restore",
+        ["BatchDelete"] = "Batch Delete",
+        ["Restore"] = "Restore",
+        ["ConfirmDeleteSelected"] = "Delete the selected homework?",
+        ["ConfirmDeleteCount"] = "Delete {0} homework items?",
+        ["NotificationLabel"] = "Homework Reminder",
+        ["SplashTitle"] = "Class Homework is starting",
+        ["SplashDetail"] = "Loading data and window state",
+        ["Subject.chinese"] = "Chinese",
+        ["Subject.math"] = "Math",
+        ["Subject.english"] = "English",
+        ["Subject.physics"] = "Physics",
+        ["Subject.chemistry"] = "Chemistry",
+        ["Subject.biology"] = "Biology"
+    };
+
+    public static bool IsEnglish(AppStorage storage) => IsEnglish(storage.Data.Settings.Language);
+
+    public static bool IsEnglish(string? language) =>
+        string.Equals(language, "en", StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(language, English, StringComparison.OrdinalIgnoreCase);
+
+    public static string Normalize(string? language) => IsEnglish(language) ? English : Chinese;
+
+    public static string Text(AppStorage storage, string key) => Text(storage.Data.Settings.Language, key);
+
+    public static string Text(string? language, string key)
+    {
+        if (IsEnglish(language) && En.TryGetValue(key, out var text)) return text;
+        return Zh(key);
+    }
+
+    public static string Format(AppStorage storage, string key, params object[] args) => string.Format(Text(storage, key), args);
+
+    public static string SubjectName(AppStorage storage, Subject subject) => SubjectName(storage.Data.Settings.Language, subject);
+
+    public static string SubjectName(string? language, Subject subject)
+    {
+        var key = BuiltInSubjectKey(subject.Id, subject.Name);
+        if (key is not null && IsEnglish(language) && En.TryGetValue(key, out var text)) return text;
+        return subject.Name;
+    }
+
+    public static string SubjectName(AppStorage storage, string subjectId, string fallbackName)
+    {
+        var subject = storage.Data.Subjects.FirstOrDefault(x => x.Id == subjectId);
+        if (subject is not null) return SubjectName(storage, subject);
+
+        var key = BuiltInSubjectKey(subjectId, fallbackName);
+        if (key is not null && IsEnglish(storage) && En.TryGetValue(key, out var text)) return text;
+        return fallbackName;
+    }
+
+    public static bool IsDefaultSubject(Subject subject) => BuiltInSubjectKey(subject.Id, subject.Name) is not null;
+
+    private static string? BuiltInSubjectKey(string? id, string? name) => (id, name) switch
+    {
+        ("chinese", _) or (_, "语文") => "Subject.chinese",
+        ("math", _) or (_, "数学") => "Subject.math",
+        ("english", _) or (_, "英语") => "Subject.english",
+        ("physics", _) or (_, "物理") => "Subject.physics",
+        ("chemistry", _) or (_, "化学") => "Subject.chemistry",
+        ("biology", _) or (_, "生物") => "Subject.biology",
+        _ => null
+    };
+
+    private static string Zh(string key) => key switch
+    {
+			"AppName" => "课堂作业", 
+			"MainTitle" => "课堂作业", 
+			"PendingCount" => "{0} 条待处理", 
+			"NoHomework" => "暂无作业", 
+			"Add" => "添加", 
+			"AddHomework" => "添加作业", 
+			"Settings" => "设置", 
+			"Hide" => "隐藏", 
+			"More" => "更多", 
+			"Done" => "完成", 
+			"Edit" => "编辑", 
+			"Delete" => "删除", 
+			"List" => "列表", 
+			"UnlockWindow" => "解锁窗口", 
+			"LockWindow" => "锁定窗口", 
+			"DisableTopmost" => "取消置顶", 
+			"KeepTopmost" => "保持置顶", 
+			"Exit" => "退出", 
+			"ShowHide" => "显示/隐藏", 
+			"OpenSettings" => "打开设置", 
+			"ConfirmDeleteHomework" => "确认删除这条作业？", 
+			"DeleteHomework" => "删除作业", 
+			"ReminderDueDefault" => "作业到时间了", 
+			"ReminderUpcomingDefault" => "作业即将上交", 
+			"ReminderDetailDefault" => "{0} 前：{1}", 
+			"SettingsAutoSaved" => "显示设置已自动保存。", 
+			"SettingsSaved" => "设置已保存。", 
+			"Export" => "导出", 
+			"Import" => "导入", 
+			"RestoreBackup" => "恢复备份", 
+			"CheckUpdate" => "检查更新", 
+			"CheckingUpdate" => "正在检查更新...", 
+			"UpdateAlreadyLatest" => "已是最新版本。当前版本：{0}。", 
+			"UpdateAvailableStatus" => "发现新版本：{0}。", 
+			"UpdateAvailableTitle" => "发现新版本", 
+			"UpdateAvailableMessage" => "当前版本：{0}\n最新版本：{1}\n\n更新内容：\n{2}\n\n是否现在启动更新器？更新准备完成后程序会自动重启。", 
+			"UpdateInstalling" => "更新器已启动，更新准备完成后程序会自动重启...", 
+			"UpdateNoNotes" => "暂无更新说明。", 
+			"UpdateCheckFailed" => "检查更新失败：{0}", 
+			"UpdateStartFailed" => "更新器启动失败，详情请查看程序日志。", 
+			"Cancel" => "取消", 
+			"Apply" => "应用", 
+			"OK" => "确定", 
+			"Language" => "语言", 
+			"KeepOnTop" => "保持置顶", 
+			"AutoStart" => "开机自启", 
+			"AutoUpdate" => "启动时自动更新", 
+			"LockWindowPositionSize" => "锁定窗口位置和大小", 
+			"EnableFullscreenDetection" => "启用全屏检测", 
+			"EnableBackgroundImage" => "启用图片背景", 
+			"ChooseBackgroundImage" => "选择图片", 
+			"NoBackgroundImageSelected" => "未选择背景图片", 
+			"ImageFileFilter" => "图片文件|*.jpg;*.jpeg;*.png;*.bmp;*.gif;*.tif;*.tiff;*.webp|所有文件 (*.*)|*.*", 
+			"BackgroundImageImported" => "背景图片已导入。", 
+			"BackgroundImageImportFailed" => "背景图片导入失败：{0}", 
+			"UnsupportedImageFile" => "不支持的图片文件类型。", 
+			"BackgroundOpacity" => "背景透明度（左：淡/稀，右：浓/不透明）", 
+			"FontOpacity" => "字体透明度（左：淡/稀，右：浓/不透明）", 
+			"FontSize" => "字体大小（左：小，右：大）", 
+			"AutoScrollSpeed" => "自动滚动速度（左：慢，右：快）", 
+			"IdleScrollSeconds" => "无操作多少秒后开始滚动", 
+			"EdgePauseSeconds" => "滚动到顶/到底停顿秒数", 
+			"Reminder" => "提醒", 
+			"MinutesBefore" => "提前分钟", 
+			"NotificationSeconds" => "通知秒数", 
+			"UpcomingTemplate" => "即将到时提醒模板", 
+			"DueTemplate" => "提交时提醒模板", 
+			"UpcomingTemplateDefault" => "{学科}作业即将上交\n{时间} 前：{内容}", 
+			"DueTemplateDefault" => "{学科}作业到时间了\n{时间} 前：{内容}", 
+			"PlaceholdersHelp" => "可用占位符：{学科}、{内容}、{时间}、{日期}、{提前分钟}。第一行作为弹窗标题，后续行作为内容。", 
+			"QuickTime" => "快捷时间", 
+			"QuickTimeHelp" => "每行：显示名|规则。规则示例：today 12:10、tomorrow 07:45、weekday 1 08:00、+30min、+1hour。weekday 1-7 表示本周周一到周日。", 
+			"SubjectsTemplates" => "学科、颜色和模板（每行：学科|#64748B|模板1,模板2）", 
+			"TemplatesHelp" => "模板中写 {n} 表示编号位置，只有带 {n} 的模板会自动递增。例如：课时作业 {n}、第 {n} 课练习", 
+			"ClassPeriods" => "上课时间段（每行：08:00-08:45）", 
+			"WeekdaysOnly" => "仅工作日生效", 
+			"EveryDay" => "每天生效", 
+			"FullscreenDetection" => "全屏检测", 
+			"FullscreenHelp" => "白名单为空时检测所有程序；黑名单优先排除。每行填写一个进程名，如 msedge、POWERPNT、wpp", 
+			"Whitelist" => "白名单", 
+			"Blacklist" => "黑名单", 
+			"RestoreBackupSuccess" => "已恢复最近备份。", 
+			"RestoreBackupFailed" => "没有可用备份，或备份无法读取。", 
+			"ExportSettings" => "导出设置", 
+			"SettingsFileFilter" => "课堂作业设置 (*.json)|*.json|所有文件 (*.*)|*.*", 
+			"SettingsFileName" => "课堂作业设置-{0}.json", 
+			"SettingsExported" => "设置已导出。", 
+			"ImportSettings" => "导入设置", 
+			"SettingsImported" => "设置已导入，原有设置已先备份。", 
+			"ImportFailed" => "导入失败：{0}", 
+			"Subject" => "学科", 
+			"KeywordTemplates" => "关键词模板", 
+			"HomeworkContent" => "作业内容", 
+			"DueTime" => "上交时间", 
+			"NoSubmissionRequired" => "无需上交", 
+			"SaveContinue" => "保存并继续添加", 
+			"Save" => "保存", 
+			"EditHomework" => "编辑作业", 
+			"SavedContinue" => "已保存，可以继续添加。", 
+			"ChooseSubject" => "请选择学科。", 
+			"ContentRequired" => "作业内容不能为空。", 
+			"InvalidDueTime" => "请选择有效的上交日期和时间，例如 17:30。", 
+			"DueTimePast" => "上交时间不能早于当前时间。", 
+			"DuplicateHomework" => "同一学科、内容和上交时间的作业已存在。", 
+			"NoonToday" => "今天中午", 
+			"Tonight" => "今天晚上", 
+			"TomorrowMorning" => "明早上交", 
+			"TomorrowNoon" => "明天中午", 
+			"TomorrowNight" => "明天晚上", 
+			"OneHourLater" => "1 小时后", 
+			"ThirtyMinutesLater" => "30 分钟后", 
+			"CurrentHomework" => "当前作业", 
+			"History" => "历史记录", 
+			"BatchArchive" => "批量归档", 
+			"BatchRestore" => "批量恢复", 
+			"BatchDelete" => "批量删除", 
+			"Restore" => "恢复", 
+			"ConfirmDeleteSelected" => "确认删除选中的作业？", 
+			"ConfirmDeleteCount" => "确认删除 {0} 条作业？", 
+			"NotificationLabel" => "作业提醒", 
+			"SplashTitle" => "课堂作业正在启动", 
+			"SplashDetail" => "加载数据和窗口状态", 
+			_ => key, 
+		};
+}

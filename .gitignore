@@ -1,0 +1,28 @@
+# Documentation excluded by request
+*.md
+
+# Build output
+bin/
+obj/
+app/bin/
+app/obj/
+
+# Local package output
+packages/
+app/bin/Release/net8.0-windows/win-x64/packages/
+
+# IDE and user files
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Logs and temp files
+*.log
+*.tmp
+*.temp
+
+# OpenCode local dependencies/cache
+.opencode/node_modules/
