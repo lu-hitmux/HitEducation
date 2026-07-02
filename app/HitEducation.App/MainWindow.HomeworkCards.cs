@@ -27,7 +27,7 @@ public partial class MainWindow
 		HomeworkItems.Items.Clear();
 		CountText.Text = Localizer.Format(storage, "PendingCount", items.Count);
 		EmptyToolbar.Visibility = items.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
-		HomeworkScroll.Visibility = items.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+		HomeworkScroll.Visibility = Visibility.Visible;
 		foreach (Homework homework in items)
 		{
 			HomeworkItems.Items.Add(CreateHomeworkCard(homework));
@@ -313,7 +313,7 @@ public partial class MainWindow
 		int count = storage.GetActiveHomeworks().Count();
 		CountText.Text = Localizer.Format(storage, "PendingCount", count);
 		EmptyToolbar.Visibility = ((count != 0) ? Visibility.Collapsed : Visibility.Visible);
-		HomeworkScroll.Visibility = ((count == 0) ? Visibility.Collapsed : Visibility.Visible);
+		HomeworkScroll.Visibility = Visibility.Visible;
 		UpdateHomeworkCardWidths();
 		AnimateHomeworkReflow(previousCardPositions);
 		MemoryOptimizer.TrimAfterDelay(1200, force: true);
