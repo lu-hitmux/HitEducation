@@ -99,8 +99,13 @@ function Publish-GitHubRelease {
         $body = "HitEducation $Version update."
     }
 
+    $previousErrorActionPreference = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
     & $gh release view $Tag --repo $GitHubRepo *> $null
-    if ($LASTEXITCODE -eq 0) {
+    $releaseViewExitCode = $LASTEXITCODE
+    $ErrorActionPreference = $previousErrorActionPreference
+
+    if ($releaseViewExitCode -eq 0) {
         & $gh release upload $Tag $appZip $updaterZip $ManifestPath --repo $GitHubRepo --clobber
     }
     else {

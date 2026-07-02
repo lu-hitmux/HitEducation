@@ -57,9 +57,9 @@ public partial class MainWindow
 		ApplyLanguage();
 		ApplyBrushOpacity(RootPanel, Border.BackgroundProperty, storage.Data.Settings.Opacity);
 		ApplyBrushOpacity(HeaderBar, Panel.BackgroundProperty, storage.Data.Settings.Opacity);
-		ApplyBrushOpacity(EmptyToolbar, Border.BackgroundProperty, storage.Data.Settings.Opacity);
 		ApplyBackgroundImage();
 		ApplyButtonBackgroundOpacity(this, storage.Data.Settings.Opacity);
+		ApplyImageOpacity(EmptyAddButtonIcon, storage.Data.Settings.Opacity);
 		ApplyTextOpacity(TitleText, storage.Data.Settings.FontOpacity);
 		ApplyTextOpacity(CountText, storage.Data.Settings.FontOpacity);
 		ApplyTextOpacity(EmptyText, storage.Data.Settings.FontOpacity);
@@ -112,7 +112,9 @@ public partial class MainWindow
 		ApplyFloatingButtonMetrics(SettingsButton, buttonFontSize, buttonHeight, 56.0);
 		ApplyFloatingButtonMetrics(HideButton, buttonFontSize, buttonHeight, 56.0);
 		ApplyFloatingButtonMetrics(MoreButton, buttonFontSize, buttonHeight, 56.0);
-		ApplyFloatingButtonMetrics(EmptyAddButton, buttonFontSize, buttonHeight, 96.0);
+		EmptyAddButton.FontSize = buttonFontSize;
+		EmptyAddButton.MinWidth = 144.0 + Math.Max(0.0, buttonFontSize - DefaultFloatingButtonFontSize) * 2.0;
+		EmptyAddButton.MinHeight = 162.0 + Math.Max(0.0, buttonFontSize - DefaultFloatingButtonFontSize) * 2.0;
 	}
 
 	private static void ApplyFloatingButtonMetrics(Button button, double fontSize, double height, double baseMinWidth)
@@ -166,6 +168,11 @@ public partial class MainWindow
 			next.Opacity = Math.Clamp(opacity, 0.35, 1.0);
 			text.Foreground = next;
 		}
+	}
+
+	private static void ApplyImageOpacity(System.Windows.Controls.Image image, double opacity)
+	{
+		image.Opacity = Math.Clamp(opacity, 0.35, 1.0);
 	}
 
 	private static void ApplyButtonBackgroundOpacity(DependencyObject root, double opacity)
