@@ -13,6 +13,8 @@ public sealed class AppData
 
 	public List<Homework> Homeworks { get; set; } = [];
 
+	public RandomPickerState RandomPicker { get; set; } = new();
+
 	public static List<Subject> DefaultSubjects() =>
 	[
 		new() { Id = "chinese", Name = "语文", Color = "#BA5A31", SortOrder = 1 },

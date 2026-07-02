@@ -499,49 +499,6 @@ public partial class MainWindow
 
 	private void OpenMoreMenu()
 	{
-		MemoryOptimizer.AfterUserAction();
-		var menu = new ContextMenu
-		{
-			PlacementTarget = MoreButton,
-			Placement = PlacementMode.Bottom
-		};
-		menu.Items.Add(MenuItem(Localizer.Text(storage, "List"), () =>
-		{
-			OpenListWindow();
-			return Task.CompletedTask;
-		}));
-		menu.Items.Add(MenuItem(Localizer.Text(storage, storage.Data.Settings.LockWindow ? "UnlockWindow" : "LockWindow"), async () =>
-		{
-			storage.Data.Settings.LockWindow = !storage.Data.Settings.LockWindow;
-			await storage.SaveAsync();
-		}));
-		menu.Items.Add(MenuItem(Localizer.Text(storage, storage.Data.Settings.AlwaysOnTop ? "DisableTopmost" : "KeepTopmost"), async () =>
-		{
-			storage.Data.Settings.AlwaysOnTop = !storage.Data.Settings.AlwaysOnTop;
-			ApplySettings();
-			await storage.SaveAsync();
-		}));
-		menu.Items.Add(MenuItem(Localizer.Text(storage, "Settings"), () =>
-		{
-			OpenSettingsWindow();
-			return Task.CompletedTask;
-		}));
-		menu.Items.Add(MenuItem(Localizer.Text(storage, "Exit"), ExitAsync));
-		MoreButton.ContextMenu = menu;
-		menu.IsOpen = true;
-	}
-
-	private static MenuItem MenuItem(string text, Func<Task> action)
-	{
-		var item = new MenuItem
-		{
-			Header = text,
-			Height = 44.0
-		};
-		item.Click += async (_, _) =>
-		{
-			await action();
-		};
-		return item;
+		OpenMoreWindow();
 	}
 }

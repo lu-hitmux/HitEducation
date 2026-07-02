@@ -15,6 +15,8 @@ public partial class MainWindow
 		await windowSwitchLock.WaitAsync();
 		try
 		{
+			await CloseMoreWindowAsync();
+			await CloseRandomPickerWindowAsync();
 			if (homeworkWindow is not null)
 			{
 				if (!homeworkWindow.IsEditing)
@@ -51,6 +53,8 @@ public partial class MainWindow
 		{
 			await CloseHomeworkWindowAsync(saveAddDraft: true);
 			await CloseListWindowAsync();
+			await CloseMoreWindowAsync();
+			await CloseRandomPickerWindowAsync();
 
 			homeworkWindow = new AddEditHomeworkWindow(storage, id, RenderHomeworks)
 			{
@@ -72,6 +76,8 @@ public partial class MainWindow
 		await windowSwitchLock.WaitAsync();
 		try
 		{
+			await CloseMoreWindowAsync();
+			await CloseRandomPickerWindowAsync();
 			if (listWindow is not null)
 			{
 				ShowExistingWindow(listWindow, listWindow.ListRoot);
@@ -101,6 +107,8 @@ public partial class MainWindow
 		await windowSwitchLock.WaitAsync();
 		try
 		{
+			await CloseMoreWindowAsync();
+			await CloseRandomPickerWindowAsync();
 			if (settingsWindow is not null)
 			{
 				ShowExistingWindow(settingsWindow, settingsWindow.SettingsRoot);
@@ -127,6 +135,81 @@ public partial class MainWindow
 		{
 			windowSwitchLock.Release();
 		}
+	}
+
+	private async void OpenMoreWindow()
+	{
+		MemoryOptimizer.AfterUserAction();
+		await windowSwitchLock.WaitAsync();
+		try
+		{
+			if (moreWindow is not null)
+			{
+				ShowExistingWindow(moreWindow, moreWindow.MoreRoot);
+				return;
+			}
+
+			await CloseHomeworkWindowAsync(saveAddDraft: true);
+			await CloseSettingsWindowAsync();
+			await CloseListWindowAsync();
+			await CloseRandomPickerWindowAsync();
+
+			moreWindow = new MoreWindow(storage, OpenAddWindow, OpenListWindow, OpenRandomPickerWindow, OpenSettingsWindow, ToggleLockWindowAsync, ToggleTopmostAsync, ExitAsync)
+			{
+				Owner = this,
+				WindowStartupLocation = WindowStartupLocation.Manual
+			};
+			moreWindow.Closed += (_, _) => moreWindow = null;
+			ShowNewChildWindow(moreWindow);
+		}
+		finally
+		{
+			windowSwitchLock.Release();
+		}
+	}
+
+	private async void OpenRandomPickerWindow()
+	{
+		MemoryOptimizer.AfterUserAction();
+		await windowSwitchLock.WaitAsync();
+		try
+		{
+			if (randomPickerWindow is not null)
+			{
+				ShowExistingWindow(randomPickerWindow, randomPickerWindow.PickerRoot);
+				return;
+			}
+
+			await CloseHomeworkWindowAsync(saveAddDraft: true);
+			await CloseSettingsWindowAsync();
+			await CloseListWindowAsync();
+			await CloseMoreWindowAsync();
+
+			randomPickerWindow = new RandomPickerWindow(storage)
+			{
+				Owner = this,
+				WindowStartupLocation = WindowStartupLocation.Manual
+			};
+			randomPickerWindow.Closed += (_, _) => randomPickerWindow = null;
+			ShowNewChildWindow(randomPickerWindow);
+		}
+		finally
+		{
+			windowSwitchLock.Release();
+		}
+	}
+
+	private async Task ToggleLockWindowAsync()
+	{
+		storage.Data.Settings.LockWindow = !storage.Data.Settings.LockWindow;
+		await storage.SaveAsync();
+	}
+
+	private async Task ToggleTopmostAsync()
+	{
+		storage.Data.Settings.AlwaysOnTop = !storage.Data.Settings.AlwaysOnTop;
+		ApplySettings();
+		await storage.SaveAsync();
 	}
 
 	private void PlaceBesideMainWindow(Window window)
@@ -235,6 +318,28 @@ public partial class MainWindow
 		settingsWindow = null;
 	}
 
+	private async Task CloseMoreWindowAsync()
+	{
+		if (moreWindow is null)
+		{
+			return;
+		}
+
+		await moreWindow.CloseWithAnimationAsync();
+		moreWindow = null;
+	}
+
+	private async Task CloseRandomPickerWindowAsync()
+	{
+		if (randomPickerWindow is null)
+		{
+			return;
+		}
+
+		await randomPickerWindow.CloseWithAnimationAsync();
+		randomPickerWindow = null;
+	}
+
 	private async Task CloseListWindowAsync()
 	{
 		if (listWindow is null)
@@ -303,6 +408,8 @@ public partial class MainWindow
 
 			await CloseSettingsWindowAsync();
 			await CloseListWindowAsync();
+			await CloseMoreWindowAsync();
+			await CloseRandomPickerWindowAsync();
 
 			foreach (var notificationWindow in notificationWindows.ToList())
 			{

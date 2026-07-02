@@ -1,0 +1,77 @@
+<Window x:Class="HitEducation.App.MoreWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="更多"
+        Icon="icons/hiteducation-app-mono.ico"
+        Width="430"
+        Height="390"
+        MinWidth="380"
+        MinHeight="340"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="None"
+        ResizeMode="CanResize"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ShowInTaskbar="False"
+        UseLayoutRounding="True">
+    <Border x:Name="MoreRoot" Padding="18" CornerRadius="24" Background="#F2FFFFFF" TextElement.FontSize="16">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid x:Name="TitleBar" Grid.Row="0" Margin="-18,-18,-18,16" Background="Transparent" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+                <Border Background="#D9FFFFFF" CornerRadius="24,24,0,0" IsHitTestVisible="False" />
+                <TextBlock x:Name="TitleText" Margin="22,24,22,12" FontSize="21" FontWeight="Bold" Foreground="#0F172A" Text="更多" />
+            </Grid>
+
+            <UniformGrid Grid.Row="1" Columns="3" Rows="2" Margin="2,0,2,12">
+                <Button x:Name="AddButton" Margin="8" Click="Add_Click">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock Text="＋" FontSize="38" HorizontalAlignment="Center" />
+                        <TextBlock x:Name="AddButtonText" Margin="0,8,0,0" HorizontalAlignment="Center" Text="添加" />
+                    </StackPanel>
+                </Button>
+                <Button x:Name="ListButton" Margin="8" Click="List_Click">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock Text="📋" FontSize="34" HorizontalAlignment="Center" />
+                        <TextBlock x:Name="ListText" Margin="0,8,0,0" HorizontalAlignment="Center" Text="列表" />
+                    </StackPanel>
+                </Button>
+                <Button x:Name="PickerButton" Margin="8" Click="Picker_Click">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock Text="🎲" FontSize="34" HorizontalAlignment="Center" />
+                        <TextBlock x:Name="PickerText" Margin="0,8,0,0" HorizontalAlignment="Center" Text="随机点名" />
+                    </StackPanel>
+                </Button>
+                <Button x:Name="LockButton" Margin="8" Click="Lock_Click">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock x:Name="LockIcon" Text="🔒" FontSize="34" HorizontalAlignment="Center" />
+                        <TextBlock x:Name="LockText" Margin="0,8,0,0" HorizontalAlignment="Center" Text="锁定" />
+                    </StackPanel>
+                </Button>
+                <Button x:Name="TopmostButton" Margin="8" Click="Topmost_Click">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock Text="📌" FontSize="34" HorizontalAlignment="Center" />
+                        <TextBlock x:Name="TopmostText" Margin="0,8,0,0" HorizontalAlignment="Center" Text="置顶" />
+                    </StackPanel>
+                </Button>
+                <Button x:Name="SettingsButton" Margin="8" Click="Settings_Click">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock Text="⚙" FontSize="34" HorizontalAlignment="Center" />
+                        <TextBlock x:Name="SettingsText" Margin="0,8,0,0" HorizontalAlignment="Center" Text="设置" />
+                    </StackPanel>
+                </Button>
+            </UniformGrid>
+
+            <Button x:Name="ExitButton" Grid.Row="2" Width="96" Height="58" HorizontalAlignment="Right" Click="Exit_Click">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="⏻" FontSize="26" Margin="0,0,8,0" />
+                    <TextBlock x:Name="ExitText" VerticalAlignment="Center" Text="退出" />
+                </StackPanel>
+            </Button>
+        </Grid>
+    </Border>
+</Window>

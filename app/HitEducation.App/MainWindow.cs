@@ -160,6 +160,10 @@ public partial class MainWindow : Window
 
 	private HomeworkListWindow? listWindow;
 
+	private MoreWindow? moreWindow;
+
+	private RandomPickerWindow? randomPickerWindow;
+
 	private readonly Queue<DeferredReminder> deferredReminders = new();
 
 	private DateTime? classPeriodEndedAt;

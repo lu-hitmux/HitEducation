@@ -204,6 +204,31 @@ public sealed class AppStorage
 		Data.Window ??= new WindowPlacement();
 		if (Data.Subjects.Count == 0) Data.Subjects = AppData.DefaultSubjects();
 		Data.Homeworks ??= [];
+		Data.RandomPicker ??= new RandomPickerState();
+		Data.RandomPicker.Members ??= [];
+		Data.RandomPicker.Rosters ??= [];
+		if (Data.RandomPicker.Rosters.Count == 0 && Data.RandomPicker.Members.Count > 0)
+		{
+			var legacyRoster = new RandomPickerRoster
+			{
+				Name = "默认名单",
+				Members = Data.RandomPicker.Members
+			};
+			Data.RandomPicker.Rosters.Add(legacyRoster);
+			Data.RandomPicker.ActiveRosterId = legacyRoster.Id;
+		}
+		if (string.IsNullOrWhiteSpace(Data.RandomPicker.ActiveRosterId) && Data.RandomPicker.Rosters.Count > 0)
+		{
+			Data.RandomPicker.ActiveRosterId = Data.RandomPicker.Rosters[0].Id;
+		}
+		foreach (var roster in Data.RandomPicker.Rosters)
+		{
+			roster.Id = string.IsNullOrWhiteSpace(roster.Id) ? Guid.NewGuid().ToString("N") : roster.Id;
+			roster.Name = string.IsNullOrWhiteSpace(roster.Name) ? "未命名名单" : roster.Name.Trim();
+			roster.Members ??= [];
+			NormalizePickerMembers(roster.Members);
+		}
+		NormalizePickerMembers(Data.RandomPicker.Members);
 		Data.Settings.ClassPeriods ??= [];
 		Data.Settings.FullscreenProcessNames ??= [];
 		Data.Settings.FullscreenBlockedProcessNames ??= [];
@@ -211,5 +236,15 @@ public sealed class AppStorage
 		if (Data.Settings.FontOpacity <= 0) Data.Settings.FontOpacity = 1;
 		if (string.IsNullOrWhiteSpace(Data.Settings.UpcomingReminderTemplate)) Data.Settings.UpcomingReminderTemplate = "{学科}作业即将上交\n{时间} 前：{内容}";
 		if (string.IsNullOrWhiteSpace(Data.Settings.DueReminderTemplate)) Data.Settings.DueReminderTemplate = "{学科}作业到时间了\n{时间} 前：{内容}";
+	}
+
+	private static void NormalizePickerMembers(List<RandomPickerMember> members)
+	{
+		foreach (var member in members)
+		{
+			member.Name = (member.Name ?? string.Empty).Trim();
+			member.ThumbnailPath ??= string.Empty;
+			member.Weight = Math.Clamp(member.Weight, 0.01, 10.0);
+		}
 	}
 }
