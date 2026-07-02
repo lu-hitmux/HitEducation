@@ -337,7 +337,18 @@ internal static class UpdaterProgram
 			if (!process.WaitForExit(5000))
 			{
 				Log("Stopping app process: " + processId);
-				process.Kill(entireProcessTree: true);
+				try
+				{
+					Process.Start(new ProcessStartInfo("taskkill")
+					{
+						UseShellExecute = true,
+						Arguments = $"/F /PID {processId} /T"
+					});
+				}
+				catch
+				{
+					process.Kill();
+				}
 				process.WaitForExit(10000);
 			}
 			Log("App process stopped or exited: " + processId);
