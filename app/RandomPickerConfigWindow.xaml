@@ -13,8 +13,13 @@
         AllowsTransparency="True"
         Background="Transparent"
         ShowInTaskbar="False"
-        UseLayoutRounding="True">
-    <Border x:Name="ConfigRoot" Padding="18" CornerRadius="24" Background="#F2FFFFFF" TextElement.FontSize="16">
+        UseLayoutRounding="True"
+        AllowDrop="True"
+        PreviewDragEnter="Window_DragOver"
+        PreviewDragOver="Window_DragOver"
+        PreviewDragLeave="Window_DragLeave"
+        PreviewDrop="Window_Drop">
+    <Border x:Name="ConfigRoot" Padding="18" CornerRadius="24" Background="#F2FFFFFF" TextElement.FontSize="16" AllowDrop="True" PreviewDragEnter="Window_DragOver" PreviewDragOver="Window_DragOver" PreviewDragLeave="Window_DragLeave" PreviewDrop="Window_Drop">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -29,12 +34,31 @@
                 <TextBlock x:Name="TitleText" Margin="22,24,22,10" FontSize="21" FontWeight="Bold" Foreground="#0F172A" Text="点名配置" />
             </Grid>
 
-            <StackPanel Grid.Row="1" Margin="2,0,2,12">
+            <Grid Grid.Row="1" Margin="2,0,2,12">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
                 <TextBlock x:Name="RosterLabel" FontWeight="Bold" Margin="0,0,0,6" Text="当前名单" />
-                <ComboBox x:Name="RosterBox" Height="40" DisplayMemberPath="Name" SelectionChanged="RosterBox_SelectionChanged" />
-            </StackPanel>
+                <ComboBox x:Name="RosterBox" Grid.Row="1" Grid.Column="0" Height="40" DisplayMemberPath="Name" SelectionChanged="RosterBox_SelectionChanged" />
+                <Button x:Name="DeleteRosterButton" Grid.Row="1" Grid.Column="1" MinWidth="78" Height="40" Margin="8,0,0,0" Click="DeleteRoster_Click" Content="删除" />
+            </Grid>
 
-            <TextBlock x:Name="HelpText" Grid.Row="2" Foreground="#64748B" TextWrapping="Wrap" Margin="2,0,2,12" />
+            <StackPanel Grid.Row="2" Margin="2,0,2,12">
+                <TextBlock x:Name="HelpText" Foreground="#64748B" TextWrapping="Wrap" />
+                <Grid x:Name="ImportProgressPanel" Margin="0,8,0,0" Visibility="Collapsed">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="46" />
+                    </Grid.ColumnDefinitions>
+                    <ProgressBar x:Name="ImportProgress" Grid.Column="0" Height="6" Minimum="0" Maximum="100" VerticalAlignment="Center" />
+                    <TextBlock x:Name="ImportProgressText" Grid.Column="1" Text="0%" FontSize="12" Foreground="#64748B" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                </Grid>
+            </StackPanel>
 
             <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" PanningMode="VerticalOnly">
                 <ItemsControl x:Name="MemberItems">
@@ -42,27 +66,63 @@
                         <DataTemplate>
                             <Border Margin="0,0,0,8" Padding="12" CornerRadius="14" Background="#EAF2FF">
                                 <Grid>
+                                    <Grid x:Name="ThumbnailRow">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="104" />
-                                        <ColumnDefinition Width="120" />
+                                        <ColumnDefinition Width="96" />
+                                        <ColumnDefinition Width="108" />
+                                        <ColumnDefinition Width="28" />
                                         <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="56" />
+                                        <ColumnDefinition Width="28" />
+                                        <ColumnDefinition Width="48" />
                                     </Grid.ColumnDefinitions>
-                                    <Image Grid.Column="0" Source="{Binding ThumbnailPath}" Width="92" Height="52" Stretch="UniformToFill" />
-                                    <TextBlock Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" FontWeight="SemiBold" Margin="8,0,0,0" />
-                                    <Slider Grid.Column="2" Minimum="0" Maximum="60" TickFrequency="1" IsSnapToTickEnabled="True" IsMoveToPointEnabled="True" Value="{Binding SliderValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="12,0" />
-                                    <TextBlock Grid.Column="3" Text="{Binding WeightText}" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                                    <Image Grid.Column="0" Source="{Binding ThumbnailPath}" Width="84" Height="48" Stretch="UniformToFill" />
+                                    <TextBlock Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" FontWeight="SemiBold" Margin="6,0,0,0" />
+                                    <Button Grid.Column="2" Width="24" Height="28" Padding="0" Click="DecreaseWeight_Click" Content="-" />
+                                    <Slider Grid.Column="3" Minimum="0" Maximum="100" TickFrequency="1" IsSnapToTickEnabled="True" IsMoveToPointEnabled="True" Value="{Binding SliderValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="4,0" />
+                                    <Button Grid.Column="4" Width="24" Height="28" Padding="0" Click="IncreaseWeight_Click" Content="+" />
+                                    <TextBlock Grid.Column="5" Text="{Binding WeightText}" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                                    </Grid>
+                                    <Grid x:Name="PlainRow" Visibility="Collapsed">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="150" />
+                                        <ColumnDefinition Width="28" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="28" />
+                                        <ColumnDefinition Width="48" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" FontWeight="SemiBold" />
+                                    <Button Grid.Column="1" Width="24" Height="28" Padding="0" Click="DecreaseWeight_Click" Content="-" />
+                                    <Slider Grid.Column="2" Minimum="0" Maximum="100" TickFrequency="1" IsSnapToTickEnabled="True" IsMoveToPointEnabled="True" Value="{Binding SliderValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="4,0" />
+                                    <Button Grid.Column="3" Width="24" Height="28" Padding="0" Click="IncreaseWeight_Click" Content="+" />
+                                    <TextBlock Grid.Column="4" Text="{Binding WeightText}" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                                    </Grid>
                                 </Grid>
                             </Border>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding HasThumbnail}" Value="False">
+                                    <Setter TargetName="ThumbnailRow" Property="Visibility" Value="Collapsed" />
+                                    <Setter TargetName="PlainRow" Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </ScrollViewer>
 
             <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,14,0,0">
+                <Button x:Name="ResetWeightsButton" MinWidth="104" Height="42" Margin="8,0,0,0" Click="ResetWeights_Click" Content="一键重置" />
                 <Button x:Name="CancelButton" MinWidth="86" Height="42" Margin="8,0,0,0" Click="Cancel_Click" Content="取消" />
                 <Button x:Name="OkButton" MinWidth="86" Height="42" Margin="8,0,0,0" Click="Ok_Click" Content="确定" />
             </StackPanel>
+            <Thumb x:Name="ResizeThumb"
+                   Grid.RowSpan="5"
+                   Width="22"
+                   Height="22"
+                   HorizontalAlignment="Right"
+                   VerticalAlignment="Bottom"
+                   Cursor="SizeNWSE"
+                   Opacity="0"
+                   DragDelta="ResizeThumb_DragDelta" />
         </Grid>
     </Border>
 </Window>

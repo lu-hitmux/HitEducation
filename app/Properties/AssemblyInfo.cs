@@ -6,13 +6,13 @@ using System.Windows;
 [assembly: ThemeInfo(ResourceDictionaryLocation.None, ResourceDictionaryLocation.SourceAssembly)]
 [assembly: AssemblyCompany("HitEducation.App")]
 [assembly: AssemblyConfiguration("Release")]
-[assembly: AssemblyFileVersion("1.0.9.0")]
-[assembly: AssemblyInformationalVersion("1.0.9")]
+[assembly: AssemblyFileVersion("1.1.10.0")]
+[assembly: AssemblyInformationalVersion("1.1.10")]
 [assembly: AssemblyProduct("HitEducation.App")]
 [assembly: AssemblyTitle("HitEducation.App")]
 [assembly: TargetPlatform("Windows7.0")]
 [assembly: SupportedOSPlatform("Windows7.0")]
-[assembly: AssemblyVersion("1.0.9.0")]
+[assembly: AssemblyVersion("1.1.10.0")]
 
 
 

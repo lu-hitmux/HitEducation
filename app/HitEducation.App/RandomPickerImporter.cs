@@ -14,6 +14,9 @@ namespace HitEducation.App;
 
 public static class RandomPickerImporter
 {
+	private const int PowerPointThumbnailWidth = 640;
+	private const int PowerPointThumbnailHeight = 360;
+
 	private static readonly HashSet<string> SupportedExtensions = new(StringComparer.OrdinalIgnoreCase)
 	{
 		".json", ".csv", ".tsv", ".txt", ".xlsx", ".ppt", ".pptx"
@@ -21,7 +24,7 @@ public static class RandomPickerImporter
 
 	public static bool IsSupported(string path) => SupportedExtensions.Contains(Path.GetExtension(path));
 
-	public static List<RandomPickerMember> Import(string path, string thumbnailDirectory)
+	public static List<RandomPickerMember> Import(string path, string thumbnailDirectory, IProgress<RandomPickerImportProgress>? progress = null)
 	{
 		if (!IsSupported(path))
 		{
@@ -34,9 +37,10 @@ public static class RandomPickerImporter
 		{
 			".json" => ImportJson(path),
 			".xlsx" => ImportXlsx(path),
-			".ppt" or ".pptx" => ImportPowerPoint(path, thumbnailDirectory),
+			".ppt" or ".pptx" => ImportPowerPoint(path, thumbnailDirectory, progress),
 			_ => ImportTextTable(path)
 		};
+		progress?.Report(new RandomPickerImportProgress { Percent = isPowerPoint ? 90 : 85 });
 
 		List<RandomPickerMember> distinctMembers = members
 			.Where(x => !string.IsNullOrWhiteSpace(x.Name))
@@ -175,8 +179,9 @@ public static class RandomPickerImporter
 		return result;
 	}
 
-	private static List<RandomPickerMember> ImportPowerPoint(string path, string thumbnailDirectory)
+	private static List<RandomPickerMember> ImportPowerPoint(string path, string thumbnailDirectory, IProgress<RandomPickerImportProgress>? progress)
 	{
+		progress?.Report(new RandomPickerImportProgress { Percent = 20 });
 		Type powerpointType = Type.GetTypeFromProgID("PowerPoint.Application")
 			?? throw new InvalidOperationException("未检测到 Microsoft PowerPoint，无法导入 PPT/PPTX 缩略图。");
 		Directory.CreateDirectory(thumbnailDirectory);
@@ -189,14 +194,19 @@ public static class RandomPickerImporter
 		dynamic? presentation = null;
 		try
 		{
+			progress?.Report(new RandomPickerImportProgress { Percent = 25 });
 			app = Activator.CreateInstance(powerpointType);
 			presentation = app.Presentations.Open(path, -1, 0, 0);
 			var result = new List<RandomPickerMember>();
 			int count = presentation.Slides.Count;
+			progress?.Report(new RandomPickerImportProgress { Percent = 35 });
+			presentation.Export(thumbnailDirectory, "PNG", PowerPointThumbnailWidth, PowerPointThumbnailHeight);
+			progress?.Report(new RandomPickerImportProgress { Percent = 75 });
 			for (int index = 1; index <= count; index++)
 			{
 				string imagePath = Path.Combine(thumbnailDirectory, $"slide-{index:000}.png");
-				presentation.Slides[index].Export(imagePath, "PNG", 1280, 720);
+				MoveExportedSlideImage(thumbnailDirectory, index, imagePath);
+				progress?.Report(new RandomPickerImportProgress { Percent = 75 + (int)Math.Round(15.0 * index / count) });
 				result.Add(new RandomPickerMember
 				{
 					Name = $"第 {index} 页",
@@ -220,6 +230,29 @@ public static class RandomPickerImporter
 
 			if (presentation is not null) Marshal.FinalReleaseComObject(presentation);
 			if (app is not null) Marshal.FinalReleaseComObject(app);
+		}
+	}
+
+	private static void MoveExportedSlideImage(string thumbnailDirectory, int slideIndex, string imagePath)
+	{
+		string[] candidates =
+		[
+			Path.Combine(thumbnailDirectory, $"幻灯片{slideIndex}.PNG"),
+			Path.Combine(thumbnailDirectory, $"幻灯片{slideIndex}.png"),
+			Path.Combine(thumbnailDirectory, $"Slide{slideIndex}.PNG"),
+			Path.Combine(thumbnailDirectory, $"Slide{slideIndex}.png")
+		];
+		string? exportedPath = candidates.FirstOrDefault(File.Exists)
+			?? Directory.GetFiles(thumbnailDirectory, "*.png").OrderBy(x => x, StringComparer.OrdinalIgnoreCase).Skip(slideIndex - 1).FirstOrDefault();
+
+		if (exportedPath is null)
+		{
+			return;
+		}
+
+		if (!string.Equals(exportedPath, imagePath, StringComparison.OrdinalIgnoreCase))
+		{
+			File.Move(exportedPath, imagePath, overwrite: true);
 		}
 	}
 

@@ -15,13 +15,16 @@
         ShowInTaskbar="False"
         UseLayoutRounding="True"
         AllowDrop="True"
+        PreviewDragEnter="Window_DragOver"
         PreviewDragOver="Window_DragOver"
+        PreviewDragLeave="Window_DragLeave"
         PreviewDrop="Window_Drop">
     <Window.Resources>
         <Style TargetType="FrameworkElement">
             <Setter Property="AllowDrop" Value="True" />
             <EventSetter Event="DragEnter" Handler="Content_DragEnter" />
             <EventSetter Event="DragOver" Handler="Content_DragOver" />
+            <EventSetter Event="DragLeave" Handler="Content_DragLeave" />
             <EventSetter Event="Drop" Handler="Content_Drop" />
         </Style>
     </Window.Resources>
@@ -31,7 +34,9 @@
             Background="#F2FFFFFF"
             TextElement.FontSize="17"
             AllowDrop="True"
+            PreviewDragEnter="Window_DragOver"
             PreviewDragOver="Window_DragOver"
+            PreviewDragLeave="Window_DragLeave"
             PreviewDrop="Window_Drop">
         <Grid>
             <Grid.RowDefinitions>
@@ -51,7 +56,17 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <TextBlock x:Name="StatusText" Grid.Row="0" Foreground="#64748B" TextWrapping="Wrap" Margin="2,0,2,16" />
+                <StackPanel Grid.Row="0" Margin="2,0,2,16">
+                    <TextBlock x:Name="StatusText" Foreground="#64748B" TextWrapping="Wrap" />
+                    <Grid x:Name="ImportProgressPanel" Margin="0,8,0,0" Visibility="Collapsed">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="46" />
+                        </Grid.ColumnDefinitions>
+                        <ProgressBar x:Name="ImportProgress" Grid.Column="0" Height="6" Minimum="0" Maximum="100" VerticalAlignment="Center" />
+                        <TextBlock x:Name="ImportProgressText" Grid.Column="1" Text="0%" FontSize="12" Foreground="#64748B" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                    </Grid>
+                </StackPanel>
                 <Border x:Name="SamplePanel" Grid.Row="1" Visibility="Collapsed" CornerRadius="14" Background="#ECFDF5" Padding="12" Margin="0,0,0,14">
                     <TextBlock x:Name="SampleText" FontSize="14" Foreground="#166534" TextWrapping="Wrap" />
                 </Border>
@@ -86,6 +101,15 @@
                     <Button x:Name="CloseButton" MinWidth="86" Height="44" Margin="8,0,0,0" Click="Close_Click" Content="关闭" />
                 </StackPanel>
             </Grid>
+            <Thumb x:Name="ResizeThumb"
+                   Grid.RowSpan="3"
+                   Width="22"
+                   Height="22"
+                   HorizontalAlignment="Right"
+                   VerticalAlignment="Bottom"
+                   Cursor="SizeNWSE"
+                   Opacity="0"
+                   DragDelta="ResizeThumb_DragDelta" />
         </Grid>
     </Border>
 </Window>
