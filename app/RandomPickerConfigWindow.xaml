@@ -43,12 +43,12 @@
                             <Border Margin="0,0,0,8" Padding="12" CornerRadius="14" Background="#EAF2FF">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="74" />
+                                        <ColumnDefinition Width="104" />
                                         <ColumnDefinition Width="120" />
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="56" />
                                     </Grid.ColumnDefinitions>
-                                    <Image Grid.Column="0" Source="{Binding ThumbnailPath}" Width="64" Height="36" Stretch="UniformToFill" />
+                                    <Image Grid.Column="0" Source="{Binding ThumbnailPath}" Width="92" Height="52" Stretch="UniformToFill" />
                                     <TextBlock Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" FontWeight="SemiBold" Margin="8,0,0,0" />
                                     <Slider Grid.Column="2" Minimum="0" Maximum="60" TickFrequency="1" IsSnapToTickEnabled="True" IsMoveToPointEnabled="True" Value="{Binding SliderValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="12,0" />
                                     <TextBlock Grid.Column="3" Text="{Binding WeightText}" VerticalAlignment="Center" HorizontalAlignment="Right" />

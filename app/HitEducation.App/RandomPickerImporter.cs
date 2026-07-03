@@ -29,6 +29,7 @@ public static class RandomPickerImporter
 		}
 
 		string extension = Path.GetExtension(path).ToLowerInvariant();
+		bool isPowerPoint = extension is ".ppt" or ".pptx";
 		List<RandomPickerMember> members = extension switch
 		{
 			".json" => ImportJson(path),
@@ -37,12 +38,25 @@ public static class RandomPickerImporter
 			_ => ImportTextTable(path)
 		};
 
-		return members
+		List<RandomPickerMember> distinctMembers = members
 			.Where(x => !string.IsNullOrWhiteSpace(x.Name))
 			.GroupBy(x => x.Name.Trim(), StringComparer.CurrentCultureIgnoreCase)
 			.Select(x => new RandomPickerMember { Name = x.Key, Weight = ClampWeight(x.First().Weight), ThumbnailPath = x.First().ThumbnailPath })
-			.OrderBy(x => x.Name, StringComparer.CurrentCulture)
 			.ToList();
+
+		return isPowerPoint
+			? distinctMembers
+			: distinctMembers.OrderBy(x => x.Name, ChineseNameComparer.Instance).ToList();
+	}
+
+	private sealed class ChineseNameComparer : IComparer<string>
+	{
+		public static readonly ChineseNameComparer Instance = new();
+
+		public int Compare(string? x, string? y)
+		{
+			return CultureInfo.GetCultureInfo("zh-CN").CompareInfo.Compare(x ?? string.Empty, y ?? string.Empty, CompareOptions.StringSort | CompareOptions.IgnoreCase);
+		}
 	}
 
 	private static List<RandomPickerMember> ImportJson(string path)

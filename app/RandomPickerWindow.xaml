@@ -17,6 +17,14 @@
         AllowDrop="True"
         PreviewDragOver="Window_DragOver"
         PreviewDrop="Window_Drop">
+    <Window.Resources>
+        <Style TargetType="FrameworkElement">
+            <Setter Property="AllowDrop" Value="True" />
+            <EventSetter Event="DragEnter" Handler="Content_DragEnter" />
+            <EventSetter Event="DragOver" Handler="Content_DragOver" />
+            <EventSetter Event="Drop" Handler="Content_Drop" />
+        </Style>
+    </Window.Resources>
     <Border x:Name="PickerRoot"
             Padding="18"
             CornerRadius="24"
@@ -50,7 +58,7 @@
                 <Border Grid.Row="2" CornerRadius="22" Background="#E0F2FE" Padding="18">
                     <Grid>
                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Image x:Name="SlideImage" MaxWidth="500" MaxHeight="300" Stretch="Uniform" Visibility="Collapsed" Margin="0,0,0,14" />
+                            <Image x:Name="SlideImage" MaxWidth="430" MaxHeight="250" Stretch="Uniform" Visibility="Collapsed" Margin="0,0,0,14" />
                             <TextBlock x:Name="NameText"
                                        HorizontalAlignment="Center"
                                        TextAlignment="Center"

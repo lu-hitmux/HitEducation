@@ -57,7 +57,7 @@ public partial class RandomPickerWindow : Window
 	private void RefreshState()
 	{
 		int count = storage.Data.RandomPicker.ActiveMembers.Count;
-		string rosterName = storage.Data.RandomPicker.Rosters.FirstOrDefault(x => x.Id == storage.Data.RandomPicker.ActiveRosterId)?.Name ?? string.Empty;
+		string rosterName = storage.Data.RandomPicker.ActiveRoster?.Name ?? string.Empty;
 		StatusText.Text = count == 0 ? Localizer.Text(storage, "NoRosterLoaded") : Localizer.Format(storage, "RosterLoadedCount", rosterName, count);
 		StartButton.IsEnabled = count > 0 && !rollTimer.IsEnabled;
 		ConfigButton.IsEnabled = count > 0 && !rollTimer.IsEnabled;
@@ -65,6 +65,10 @@ public partial class RandomPickerWindow : Window
 		if (count == 0)
 		{
 			ShowText(Localizer.Text(storage, "ImportRosterFirst"), 52);
+		}
+		else if (string.IsNullOrWhiteSpace(NameText.Text) || NameText.Text == Localizer.Text(storage, "ImportRosterFirst"))
+		{
+			ShowMember(storage.Data.RandomPicker.ActiveMembers[0], final: false);
 		}
 	}
 
@@ -91,7 +95,7 @@ public partial class RandomPickerWindow : Window
 		await ImportRosterAsync(dialog.FileName);
 	}
 
-	private async void Config_Click(object sender, RoutedEventArgs e)
+	private void Config_Click(object sender, RoutedEventArgs e)
 	{
 		var window = new RandomPickerConfigWindow(storage)
 		{
@@ -99,7 +103,6 @@ public partial class RandomPickerWindow : Window
 			WindowStartupLocation = WindowStartupLocation.CenterOwner
 		};
 		window.ShowDialog();
-		await storage.SaveAsync();
 		RefreshState();
 	}
 
@@ -265,6 +268,12 @@ public partial class RandomPickerWindow : Window
 		path = files[0];
 		return File.Exists(path);
 	}
+
+	private void Content_DragEnter(object sender, DragEventArgs e) => Window_DragOver(sender, e);
+
+	private void Content_DragOver(object sender, DragEventArgs e) => Window_DragOver(sender, e);
+
+	private void Content_Drop(object sender, DragEventArgs e) => Window_Drop(sender, e);
 
 	private async void Close_Click(object sender, RoutedEventArgs e)
 	{

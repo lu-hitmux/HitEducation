@@ -52,7 +52,8 @@ public partial class MoreWindow : Window
 		ListText.Text = Localizer.Text(storage, "List");
 		PickerText.Text = Localizer.Text(storage, "RandomPicker");
 		SettingsText.Text = Localizer.Text(storage, "Settings");
-		ExitText.Text = Localizer.Text(storage, "Exit");
+		CloseWindowText.Text = Localizer.Text(storage, "CloseWindow");
+		ExitText.Text = Localizer.Text(storage, "ExitApp");
 		LockText.Text = Localizer.Text(storage, storage.Data.Settings.LockWindow ? "UnlockWindow" : "LockWindow");
 		LockIcon.Text = storage.Data.Settings.LockWindow ? "🔓" : "🔒";
 		TopmostText.Text = Localizer.Text(storage, storage.Data.Settings.AlwaysOnTop ? "DisableTopmost" : "KeepTopmost");
@@ -100,6 +101,11 @@ public partial class MoreWindow : Window
 	{
 		await toggleTopmost();
 		ApplyText();
+	}
+
+	private async void CloseWindow_Click(object sender, RoutedEventArgs e)
+	{
+		await CloseWithAnimationAsync();
 	}
 
 	private async void Exit_Click(object sender, RoutedEventArgs e)

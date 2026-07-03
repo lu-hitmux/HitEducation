@@ -217,7 +217,7 @@ public sealed class AppStorage
 			Data.RandomPicker.Rosters.Add(legacyRoster);
 			Data.RandomPicker.ActiveRosterId = legacyRoster.Id;
 		}
-		if (string.IsNullOrWhiteSpace(Data.RandomPicker.ActiveRosterId) && Data.RandomPicker.Rosters.Count > 0)
+		if ((string.IsNullOrWhiteSpace(Data.RandomPicker.ActiveRosterId) || !Data.RandomPicker.Rosters.Any(x => x.Id == Data.RandomPicker.ActiveRosterId)) && Data.RandomPicker.Rosters.Count > 0)
 		{
 			Data.RandomPicker.ActiveRosterId = Data.RandomPicker.Rosters[0].Id;
 		}
@@ -227,6 +227,10 @@ public sealed class AppStorage
 			roster.Name = string.IsNullOrWhiteSpace(roster.Name) ? "未命名名单" : roster.Name.Trim();
 			roster.Members ??= [];
 			NormalizePickerMembers(roster.Members);
+		}
+		if (Data.RandomPicker.Rosters.Count > 0)
+		{
+			Data.RandomPicker.Members = Data.RandomPicker.ActiveMembers;
 		}
 		NormalizePickerMembers(Data.RandomPicker.Members);
 		Data.Settings.ClassPeriods ??= [];

@@ -14,13 +14,16 @@ public partial class RandomPickerConfigWindow : Window
 {
 	private readonly AppStorage storage;
 	private readonly ObservableCollection<MemberWeightViewModel> members;
+	private readonly string initialActiveRosterId;
 	private bool loadingRoster;
+	private bool accepted;
 	private bool closingWithAnimation;
 
 	public RandomPickerConfigWindow(AppStorage storage)
 	{
 		InitializeComponent();
 		this.storage = storage;
+		initialActiveRosterId = storage.Data.RandomPicker.ActiveRosterId;
 		members = new ObservableCollection<MemberWeightViewModel>();
 		MemberItems.ItemsSource = members;
 		ApplyLanguage();
@@ -103,14 +106,26 @@ public partial class RandomPickerConfigWindow : Window
 
 	private async void Cancel_Click(object sender, RoutedEventArgs e)
 	{
+		storage.Data.RandomPicker.ActiveRosterId = initialActiveRosterId;
 		await CloseWithAnimationAsync();
 	}
 
 	private async void Ok_Click(object sender, RoutedEventArgs e)
 	{
+		accepted = true;
 		SaveMembers();
 		await storage.SaveAsync();
 		await CloseWithAnimationAsync();
+	}
+
+	protected override void OnClosed(EventArgs e)
+	{
+		if (!accepted)
+		{
+			storage.Data.RandomPicker.ActiveRosterId = initialActiveRosterId;
+		}
+
+		base.OnClosed(e);
 	}
 
 	private sealed class MemberWeightViewModel : INotifyPropertyChanged

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace HitEducation.App;
 
@@ -10,5 +11,7 @@ public sealed class RandomPickerState
 
 	public List<RandomPickerMember> Members { get; set; } = [];
 
-	public List<RandomPickerMember> ActiveMembers => Rosters.Find(x => x.Id == ActiveRosterId)?.Members ?? Members;
+	public RandomPickerRoster? ActiveRoster => Rosters.Find(x => x.Id == ActiveRosterId) ?? Rosters.FirstOrDefault();
+
+	public List<RandomPickerMember> ActiveMembers => ActiveRoster?.Members ?? Members;
 }
